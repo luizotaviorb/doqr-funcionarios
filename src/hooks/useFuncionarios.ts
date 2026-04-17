@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { employeeApi } from "@/lib/api";
 import { Employee } from "@/types/funcionario";
 
-// Hook que trás dados iniciais através do SSR (mais pra evitar loading state na primeira chamada)
+// Hook que trás os dados iniciais através do SSR (pra evitar loading state na primeira chamada)
 export function useFuncionarios(initialEmployees: Employee[] = []) {
   const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,6 @@ export function useFuncionarios(initialEmployees: Employee[] = []) {
     isLoading,
     search,
     setSearch,
-    refetch: () => fetchEmployees(search),
     deleteEmployee,
   };
 }

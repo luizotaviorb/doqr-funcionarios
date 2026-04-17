@@ -19,7 +19,7 @@ export function FuncionariosClient({ initialEmployees }: Props) {
     useFuncionarios(initialEmployees);
 
   return (
-    <main className="min-h-screen bg-[#13131f]">
+    <main className="min-h-screen bg-brand-dark">
       <div className="bg-background mx-auto min-h-screen max-w-[1440px]">
         <Navbar />
         <div className="px-8 lg:px-[130px] pb-12">

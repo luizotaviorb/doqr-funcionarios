@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,12 +48,17 @@ export default function NovoFuncionarioPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    getValues,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FuncionarioFormValues>({
     resolver: zodResolver(funcionarioSchema),
     mode: "onTouched",
   });
+
+  const cpf = useWatch({ control, name: "cpf" });
+  const phone = useWatch({ control, name: "phone" });
+  const dateOfBith = useWatch({ control, name: "dateOfBith" });
 
   const onSubmit = async (data: FuncionarioFormValues) => {
     try {
@@ -79,7 +84,7 @@ export default function NovoFuncionarioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#13131f]">
+    <main className="min-h-screen bg-brand-dark">
       <div className="bg-background mx-auto min-h-screen max-w-[1440px]">
         <Navbar />
         <div className="px-8 lg:px-32 pb-12">
@@ -126,32 +131,29 @@ export default function NovoFuncionarioPage() {
                   <Input
                     placeholder="000.000.000-00"
                     className="h-9 border-input"
-                    value={watch("cpf") ?? ""}
+                    value={cpf ?? ""}
                     onChange={(e) =>
                       setValue(
                         "cpf",
-                        formatCPF(e.target.value, watch("cpf") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatCPF(e.target.value, getValues("cpf") ?? ""),
+                        { shouldValidate: true },
                       )
                     }
                   />
                 </FormField>
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField label="Celular" error={errors.phone?.message}>
                   <Input
                     placeholder="(99) 99999-9999"
                     className="h-9 border-input"
-                    value={watch("phone") ?? ""}
+                    value={phone ?? ""}
                     onChange={(e) =>
                       setValue(
                         "phone",
-                        formatPhone(e.target.value, watch("phone") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatPhone(e.target.value, getValues("phone") ?? ""),
+                        { shouldValidate: true },
                       )
                     }
                   />
@@ -165,14 +167,15 @@ export default function NovoFuncionarioPage() {
                     type="text"
                     placeholder="00/00/0000"
                     className="h-9 border-input"
-                    value={watch("dateOfBith") ?? ""}
+                    value={dateOfBith ?? ""}
                     onChange={(e) =>
                       setValue(
                         "dateOfBith",
-                        formatDate(e.target.value, watch("dateOfBith") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatDate(
+                          e.target.value,
+                          getValues("dateOfBith") ?? "",
+                        ),
+                        { shouldValidate: true },
                       )
                     }
                   />
@@ -199,6 +202,7 @@ export default function NovoFuncionarioPage() {
                   </Select>
                 </FormField>
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField label="Status" error={errors.status?.message}>
                   <Select
@@ -218,6 +222,7 @@ export default function NovoFuncionarioPage() {
                   </Select>
                 </FormField>
               </div>
+
               <div>
                 <Button
                   type="submit"

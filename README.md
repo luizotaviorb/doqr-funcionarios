@@ -145,3 +145,5 @@ src/
 **Máscaras com controle de backspace** — As funções de máscara (CPF, celular, data) recebem o valor anterior como parâmetro para detectar quando o usuário está apagando, evitando o comportamento indesejado de reforçar a máscara durante a exclusão de caractere.
 
 **Debounce na busca** — Implementei um atraso de 400ms (debounce) dentro do hook `useFuncionarios` na busca por nome, evitando que o site trave ou faça dezenas de chamadas inúteis à API.
+
+**Sobrescrita de estilos do shadcn/ui** — O componente de tabela do shadcn injeta classes como `px-2` e `p-2` diretamente no HTML, o que impede a aplicação do design system via CSS customizado. Para resolver, usei `!important` de forma pontual e centralizada no `globals.css`, nas classes `.table-header-cell`, `.table-cell`, `.cell-action` e no seletor `[data-sonner-toast]` para padronizar a fonte dos toasts.

@@ -25,12 +25,12 @@ interface Props {
 }
 
 const TABLE_HEADERS = [
-  { label: "Nome", width: "w-[10%]" },
+  { label: "Nome", width: "w-[11%]" },
   { label: "E-mail", width: "w-[14%]" },
   { label: "CPF", width: "w-[13%]" },
-  { label: "Celular", width: "w-[12%]" },
-  { label: "Data de Nascimento", width: "w-[18%]" },
-  { label: "Tipo Contratação", width: "w-[16%]" },
+  { label: "Celular", width: "w-[13%]" },
+  { label: "Data de Nascimento", width: "w-[17%]" },
+  { label: "Tipo Contratação", width: "w-[15%]" },
   { label: "Status", width: "w-[9%]" },
   { label: "Ação", width: "w-[8%]" },
 ];
@@ -38,7 +38,7 @@ const TABLE_HEADERS = [
 export function FuncionariosTable({ employees, isLoading, onDelete }: Props) {
   const router = useRouter();
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: number) => {
     try {
       await onDelete(id);
       toast.success("Funcionário excluído com sucesso!");
@@ -88,13 +88,7 @@ export function FuncionariosTable({ employees, isLoading, onDelete }: Props) {
     <div className="w-full overflow-hidden rounded-lg border border-border">
       <Table className="table-fixed w-full">
         <TableHeader>
-          <TableRow
-            className="hover:bg-table-header-bg border-b border-border"
-            style={{
-              borderTopLeftRadius: 8,
-              borderTopRightRadius: 8,
-            }}
-          >
+          <TableRow className="hover:bg-table-header-bg border-b border-border">
             {TABLE_HEADERS.map((header) => (
               <TableHead
                 key={header.label}
@@ -111,8 +105,18 @@ export function FuncionariosTable({ employees, isLoading, onDelete }: Props) {
               key={emp.id}
               className="border-b border-border hover:bg-muted/40 transition-colors"
             >
-              <TableCell className="table-cell">{emp.name}</TableCell>
-              <TableCell className="table-cell">{emp.email}</TableCell>
+              <TableCell
+                className="table-cell table-cell-truncate"
+                title={emp.name ?? ""}
+              >
+                {emp.name}
+              </TableCell>
+              <TableCell
+                className="table-cell table-cell-truncate"
+                title={emp.email}
+              >
+                {emp.email}
+              </TableCell>
               <TableCell className="table-cell">
                 {formatCPF(emp.cpf ?? "")}
               </TableCell>
@@ -138,7 +142,7 @@ export function FuncionariosTable({ employees, isLoading, onDelete }: Props) {
                   </Button>
                   <DeleteDialog
                     employeeName={emp.name ?? ""}
-                    onConfirm={() => handleDelete(emp.id, emp.name ?? "")}
+                    onConfirm={() => handleDelete(emp.id)}
                   />
                 </div>
               </TableCell>

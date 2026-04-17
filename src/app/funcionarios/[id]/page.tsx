@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,8 @@ export default function EditarFuncionarioPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    getValues,
+    control,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FuncionarioFormValues>({
@@ -72,8 +73,15 @@ export default function EditarFuncionarioPage() {
     mode: "onTouched",
   });
 
+  const cpf = useWatch({ control, name: "cpf" });
+  const phone = useWatch({ control, name: "phone" });
+  const dateOfBith = useWatch({ control, name: "dateOfBith" });
+  const typeOfHiring = useWatch({ control, name: "typeOfHiring" });
+  const status = useWatch({ control, name: "status" });
+  const name = useWatch({ control, name: "name" });
+
   useEffect(() => {
-    async function load() {
+    const load = async () => {
       try {
         const emp = await employeeApi.getById(id);
         reset({
@@ -89,9 +97,10 @@ export default function EditarFuncionarioPage() {
         toast.error("Erro ao carregar funcionário");
         router.push("/funcionarios");
       }
-    }
+    };
+
     load();
-  }, [id]);
+  }, [id, reset, router]);
 
   const onSubmit = async (data: FuncionarioFormValues) => {
     try {
@@ -132,7 +141,7 @@ export default function EditarFuncionarioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#13131f]">
+    <main className="min-h-screen bg-brand-dark">
       <div className="bg-background mx-auto min-h-screen max-w-[1440px]">
         <Navbar />
         <div className="px-8 lg:px-32 pb-12">
@@ -179,32 +188,29 @@ export default function EditarFuncionarioPage() {
                   <Input
                     placeholder="000.000.000-00"
                     className="h-9 border-input"
-                    value={watch("cpf") ?? ""}
+                    value={cpf ?? ""}
                     onChange={(e) =>
                       setValue(
                         "cpf",
-                        formatCPF(e.target.value, watch("cpf") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatCPF(e.target.value, getValues("cpf") ?? ""),
+                        { shouldValidate: true },
                       )
                     }
                   />
                 </FormField>
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField label="Celular" error={errors.phone?.message}>
                   <Input
                     placeholder="(99) 99999-9999"
                     className="h-9 border-input"
-                    value={watch("phone") ?? ""}
+                    value={phone ?? ""}
                     onChange={(e) =>
                       setValue(
                         "phone",
-                        formatPhone(e.target.value, watch("phone") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatPhone(e.target.value, getValues("phone") ?? ""),
+                        { shouldValidate: true },
                       )
                     }
                   />
@@ -218,14 +224,15 @@ export default function EditarFuncionarioPage() {
                     type="text"
                     placeholder="00/00/0000"
                     className="h-9 border-input"
-                    value={watch("dateOfBith") ?? ""}
+                    value={dateOfBith ?? ""}
                     onChange={(e) =>
                       setValue(
                         "dateOfBith",
-                        formatDate(e.target.value, watch("dateOfBith") ?? ""),
-                        {
-                          shouldValidate: true,
-                        },
+                        formatDate(
+                          e.target.value,
+                          getValues("dateOfBith") ?? "",
+                        ),
+                        { shouldValidate: true },
                       )
                     }
                   />
@@ -236,7 +243,7 @@ export default function EditarFuncionarioPage() {
                   error={errors.typeOfHiring?.message}
                 >
                   <Select
-                    value={watch("typeOfHiring") ?? ""}
+                    value={typeOfHiring ?? ""}
                     onValueChange={(val) =>
                       setValue("typeOfHiring", val as "CLT" | "PJ", {
                         shouldValidate: true,
@@ -253,14 +260,11 @@ export default function EditarFuncionarioPage() {
                   </Select>
                 </FormField>
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField label="Status" error={errors.status?.message}>
                   <Select
-                    value={
-                      watch("status") !== undefined
-                        ? String(watch("status"))
-                        : ""
-                    }
+                    value={status !== undefined ? String(status) : ""}
                     onValueChange={(val) =>
                       setValue("status", val === "true", {
                         shouldValidate: true,
@@ -277,6 +281,7 @@ export default function EditarFuncionarioPage() {
                   </Select>
                 </FormField>
               </div>
+
               <div className="flex items-center gap-3 pt-2">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -293,10 +298,8 @@ export default function EditarFuncionarioPage() {
                       <AlertDialogTitle>Excluir funcionário</AlertDialogTitle>
                       <AlertDialogDescription>
                         Tem certeza que deseja excluir{" "}
-                        <strong className="text-foreground">
-                          {watch("name")}
-                        </strong>
-                        ? Essa ação não pode ser desfeita.
+                        <strong className="text-foreground">{name}</strong>?
+                        Essa ação não pode ser desfeita.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

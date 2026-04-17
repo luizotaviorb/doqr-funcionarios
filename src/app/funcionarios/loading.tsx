@@ -13,7 +13,7 @@ const TABLE_HEADERS = [
 
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-[#13131f]">
+    <main className="min-h-screen bg-brand-dark">
       <div className="bg-background mx-auto min-h-screen max-w-[1440px]">
         <header className="flex items-center justify-between border-b border-border h-16 px-8 lg:px-[130px]">
           <div className="flex items-center gap-2">

@@ -26,7 +26,7 @@ export default function RootLayout({
           toastOptions={{
             className: "!w-[320px] !min-w-0",
             style: {
-              background: "#7741FB",
+              background: "var(--primary)",
               color: "#ffffff",
               border: "none",
             },
