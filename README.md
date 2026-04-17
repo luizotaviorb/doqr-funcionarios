@@ -98,39 +98,41 @@ npm run cypress:run
 
 ## 📁 Estrutura do projeto
 
+```text
 src/
 ├── app/
-│ ├── globals.css
-│ ├── layout.tsx # Layout raiz com fonte Inter e Toaster
-│ └── funcionarios/
-│ ├── page.tsx # Server Component — listagem via SSR
-│ ├── error.tsx # Tratamento de erro (App Router)
-│ ├── loading.tsx # Skeleton de loading (App Router)
-│ ├── [id]/
-│ │ └── page.tsx # Tela de edição de funcionário
-│ └── novo/
-│ └── page.tsx # Tela de cadastro de funcionário
+│   ├── globals.css
+│   ├── layout.tsx                      # Layout raiz com fonte Inter e Toaster
+│   └── funcionarios/
+│       ├── page.tsx                    # Server Component — listagem via SSR
+│       ├── error.tsx                   # Tratamento de erro (App Router)
+│       ├── loading.tsx                 # Skeleton de loading (App Router)
+│       ├── [id]/
+│       │   └── page.tsx                # Tela de edição de funcionário
+│       └── novo/
+│           └── page.tsx                # Tela de cadastro de funcionário
 ├── components/
-│ ├── funcionarios/
-│ │ ├── DeleteDialog.tsx # Dialog de confirmação de exclusão
-│ │ ├── FuncionariosClient.tsx # Client Component da listagem
-│ │ ├── FuncionariosTable.tsx # Tabela de funcionários
-│ │ └── StatusBadge.tsx # Badge de status Ativo/Inativo
-│ ├── icons/
-│ │ ├── IconArrowLeft.tsx # Ícone de voltar
-│ │ └── IconPlus.tsx # Ícone de adicionar
-│ ├── layout/
-│ │ └── Navbar.tsx # Barra de navegação
-│ └── ui/ # Componentes shadcn/ui
+│   ├── funcionarios/
+│   │   ├── DeleteDialog.tsx            # Dialog de confirmação de exclusão
+│   │   ├── FuncionariosClient.tsx      # Client Component da listagem
+│   │   ├── FuncionariosTable.tsx       # Tabela de funcionários
+│   │   └── StatusBadge.tsx             # Badge de status Ativo/Inativo
+│   ├── icons/
+│   │   ├── IconArrowLeft.tsx           # Ícone de voltar
+│   │   └── IconPlus.tsx                # Ícone de adicionar
+│   ├── layout/
+│   │   └── Navbar.tsx                  # Barra de navegação
+│   └── ui/                             # Componentes shadcn/ui
 ├── hooks/
-│ └── useFuncionarios.ts # Hook de listagem com busca e debounce
+│   └── useFuncionarios.ts              # Hook de listagem com busca e debounce
 ├── lib/
-│ ├── api.ts # Cliente HTTP com tratamento de erros
-│ └── utils.ts # Utilitários de formatação (CPF, celular, data)
+│   ├── api.ts                          # Cliente HTTP com tratamento de erros
+│   └── utils.ts                        # Utilitários de formatação (CPF, celular, data)
 ├── schemas/
-│ └── funcionario.schema.ts # Schema Zod de validação
+│   └── funcionario.schema.ts           # Schema Zod de validação
 └── types/
-└── funcionario.ts # Tipos TypeScript da entidade
+    └── funcionario.ts                  # Tipos TypeScript da entidade
+```
 
 ## 💡 Decisões técnicas
 
