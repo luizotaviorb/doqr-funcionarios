@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Controle de Funcionários — DoQR Tecnologia
 
-## Getting Started
+Sistema de gerenciamento de funcionários desenvolvido como avaliação técnica frontend para a DoQR Tecnologia.
 
-First, run the development server:
+## 🚀 Tecnologias
+
+- **Next.js 16** com App Router e TypeScript
+- **TailwindCSS v4** com design system customizado
+- **shadcn/ui** (preset Nova) para componentes de interface
+- **React Hook Form** + **Zod** para formulários e validação
+- **Sonner** para notificações toast
+- **Cypress** para testes E2E
+
+## 📋 Funcionalidades
+
+- Listagem de funcionários com busca por nome (debounce de 400ms)
+- Cadastro de novo funcionário com validação em tempo real
+- Edição de funcionário existente
+- Exclusão com dialog de confirmação
+- Máscaras de entrada para CPF, celular e data de nascimento
+- Renderização inicial via SSR (Server Side Rendering)
+- Loading state com skeleton enquanto os dados carregam
+- Feedback visual com toasts de sucesso e erro
+
+## 🔗 API
+
+A aplicação consome a API REST disponível em:
+
+https://api-testefrontend.qforms.com.br
+
+Documentação Swagger:
+
+https://api-testefrontend.qforms.com.br/swagger/index.html
+
+## ⚙️ Como rodar o projeto
+
+### Pré-requisitos
+
+- Node.js 18+
+- npm ou yarn
+
+### Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/luizotaviorb/doqr-funcionarios
+
+# Entre na pasta do projeto
+cd doqr-funcionarios
+
+# Instale as dependências
+npm install
+```
+
+### Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build de produção
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Gerar o build
+npm run build
 
-## Learn More
+# Rodar em modo produção
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 Testes E2E com Cypress
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Os testes cobrem os fluxos principais da aplicação: listagem, navegação, cadastro, edição e exclusão de funcionários.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Pré-requisito
 
-## Deploy on Vercel
+A aplicação precisa estar rodando localmente antes de executar os testes, por isso execute dois terminais diferentes:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Abrindo o Cypress (modo interativo)
+
+```bash
+npm run cypress:open
+```
+
+Selecione **E2E Testing** → escolha o browser → clique em `funcionarios.cy.ts` para rodar os testes.
+
+### Rodando os testes no terminal (modo headless)
+
+```bash
+npm run cypress:run
+```
+
+## 📁 Estrutura do projeto
+
+src/
+├── app/
+│ ├── globals.css
+│ ├── layout.tsx # Layout raiz com fonte Inter e Toaster
+│ └── funcionarios/
+│ ├── page.tsx # Server Component — listagem via SSR
+│ ├── error.tsx # Tratamento de erro (App Router)
+│ ├── loading.tsx # Skeleton de loading (App Router)
+│ ├── [id]/
+│ │ └── page.tsx # Tela de edição de funcionário
+│ └── novo/
+│ └── page.tsx # Tela de cadastro de funcionário
+├── components/
+│ ├── funcionarios/
+│ │ ├── DeleteDialog.tsx # Dialog de confirmação de exclusão
+│ │ ├── FuncionariosClient.tsx # Client Component da listagem
+│ │ ├── FuncionariosTable.tsx # Tabela de funcionários
+│ │ └── StatusBadge.tsx # Badge de status Ativo/Inativo
+│ ├── icons/
+│ │ ├── IconArrowLeft.tsx # Ícone de voltar
+│ │ └── IconPlus.tsx # Ícone de adicionar
+│ ├── layout/
+│ │ └── Navbar.tsx # Barra de navegação
+│ └── ui/ # Componentes shadcn/ui
+├── hooks/
+│ └── useFuncionarios.ts # Hook de listagem com busca e debounce
+├── lib/
+│ ├── api.ts # Cliente HTTP com tratamento de erros
+│ └── utils.ts # Utilitários de formatação (CPF, celular, data)
+├── schemas/
+│ └── funcionario.schema.ts # Schema Zod de validação
+└── types/
+└── funcionario.ts # Tipos TypeScript da entidade
+
+## 💡 Decisões técnicas
+
+**SSR na listagem** — A página inicial busca os dados no servidor via `employeeApi.getAll()` e passa os dados iniciais para o client component. Isso garante que o conteúdo seja entregue já renderizado, melhorando performance e eliminando o loading inicial para o usuário.
+
+**Design system centralizado** — Todas as cores, tipografia e espaçamentos do Figma foram mapeados como variáveis CSS no `globals.css`, seguindo a convenção do TailwindCSS v4 e shadcn/ui. Isso garante consistência visual e facilita manutenção.
+
+**Validação com Zod + refine** — O campo de data de nascimento utiliza `.refine()` para validar se a data realmente existe (ex: rejeita 31/02/2000), além das validações básicas de formato.
+
+**Máscaras com controle de backspace** — As funções de máscara (CPF, celular, data) recebem o valor anterior como parâmetro para detectar quando o usuário está apagando, evitando o comportamento indesejado de reforçar a máscara durante a exclusão de caractere.
+
+**Debounce na busca** — Implementei um atraso de 400ms (debounce) dentro do hook `useFuncionarios` na busca por nome, evitando que o site trave ou faça dezenas de chamadas inúteis à API.
