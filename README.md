@@ -114,8 +114,10 @@ src/
 ├── components/
 │   ├── funcionarios/
 │   │   ├── DeleteDialog.tsx            # Dialog de confirmação de exclusão
+│   │   ├── EditarFuncionarioForm.tsx   # Client Component da edição de funcionário existente
 │   │   ├── FuncionariosClient.tsx      # Client Component da listagem
 │   │   ├── FuncionariosTable.tsx       # Tabela de funcionários
+│   │   ├── NovoFuncionarioForm.tsx     # Client Component da criação de novo funcionário
 │   │   └── StatusBadge.tsx             # Badge de status Ativo/Inativo
 │   ├── icons/
 │   │   ├── IconArrowLeft.tsx           # Ícone de voltar
@@ -134,9 +136,13 @@ src/
     └── funcionario.ts                  # Tipos TypeScript da entidade
 ```
 
+## 📈 Próximos passos e Escalabilidade
+
+Em um cenário de maior escala ou em produção, refatoraria os formulários para adotar **Server Actions**, consolidando a lógica de mutação no servidor e eliminando as chamadas fetch client-side. A estrutura atual de **Server Components** nas pages já prepara o projeto para essa migração de forma natural.
+
 ## 💡 Decisões técnicas
 
-**SSR na listagem** — A página inicial busca os dados no servidor via `employeeApi.getAll()` e passa os dados iniciais para o client component. Isso garante que o conteúdo seja entregue já renderizado, melhorando performance e eliminando o loading inicial para o usuário.
+**SSR em todas as páginas** — Todas as rotas são Server Components por padrão. A listagem busca os dados via `employeeApi.getAll()` e a tela de edição via `employeeApi.getById()`, repassando os dados para client components responsáveis pela interatividade. Isso garante que o HTML já chegue renderizado ao cliente, melhorando performance e eliminando loading states desnecessários.
 
 **Design system centralizado** — Todas as cores, tipografia e espaçamentos do Figma foram mapeados como variáveis CSS no `globals.css`, seguindo a convenção do TailwindCSS v4 e shadcn/ui. Isso garante consistência visual e facilita manutenção.
 

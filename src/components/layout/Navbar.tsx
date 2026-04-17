@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const USER_NAME = "Luiz Otávio";
 
 export function Navbar() {
@@ -12,7 +14,13 @@ export function Navbar() {
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-full bg-avatar-bg shrink-0" />
+        <Image
+          src="/avatar.jpg"
+          alt={USER_NAME}
+          width={24}
+          height={24}
+          className="rounded-full shrink-0 object-cover"
+        />
         <span className="text-base font-semibold text-foreground">
           {USER_NAME}
         </span>
